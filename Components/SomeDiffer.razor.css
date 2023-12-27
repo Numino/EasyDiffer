@@ -1,0 +1,19 @@
+/*.monaco-editor-container { !* for all editor instances *!*/
+/*    height: 300px;*/
+/*}*/
+
+/*!* or *!*/
+
+
+
+/*!* or *!*/
+
+/*.my-editor-class { !* for a specific editor instance *!*/
+/*    height: 300px;*/
+/*}*/
+
+.test {
+    height: 100px;
+    width: 100px;
+    background: red;
+}

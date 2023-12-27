@@ -1,0 +1,70 @@
+@page "/diff-editor"
+@inject IJSRuntime jsRuntime
+
+<h3>Diff Editor</h3>
+<style>
+    #theDiffEditor {
+    height: 600px;
+    }
+</style>
+<StandaloneDiffEditor @ref="_diffEditor" Id="theDiffEditor" ConstructionOptions="DiffEditorConstructionOptions" OnDidInit="EditorOnDidInit" OnKeyUpOriginal="EditorOnKeyUpOriginal" OnKeyUpModified="EditorOnKeyUpModified" />
+
+@code {
+    private StandaloneDiffEditor _diffEditor = null!;
+    private string _valueToSetOriginal = "";
+    private string _valueToSetModified = "";
+
+    private StandaloneDiffEditorConstructionOptions DiffEditorConstructionOptions(StandaloneDiffEditor editor)
+    {
+        return new StandaloneDiffEditorConstructionOptions
+        {
+            OriginalEditable = true,
+            Theme = "vs-dark"
+        };
+    }
+
+    private async Task EditorOnDidInit()
+    {
+        var originalModel = await BlazorMonaco.Editor.Global.GetModel(jsRuntime, "theDiffEditor-originalModel");
+        if (originalModel == null)
+        {
+            var originalValue = ".monacoEditor {\n    height: 600px;\n}\n\n";
+            originalModel = await BlazorMonaco.Editor.Global.CreateModel(jsRuntime, originalValue, "text", "theDiffEditor-originalModel"); //TODO: automatic type based on contents, maybe dropdown for override
+        }
+
+        var modifiedModel = await BlazorMonaco.Editor.Global.GetModel(jsRuntime, "theDiffEditor-modifiedModel");
+        if (modifiedModel == null)
+        {
+            var modifiedValue = ".monacoEditor {\n    height: 800px;\n}\n\n";
+            modifiedModel = await BlazorMonaco.Editor.Global.CreateModel(jsRuntime, modifiedValue, "text", "theDiffEditor-modifiedModel");
+        }
+        
+        await _diffEditor.SetModel(new DiffEditorModel
+        {
+            Original = originalModel,
+            Modified = modifiedModel
+        });
+    }
+
+    private void EditorOnKeyUpOriginal(KeyboardEvent keyboardEvent)
+    {
+        Console.WriteLine("OnKeyUpOriginal: " + keyboardEvent.Code);
+    }
+
+    private void EditorOnKeyUpModified(KeyboardEvent keyboardEvent)
+    {
+        Console.WriteLine("OnKeyUpModified: " + keyboardEvent.Code);
+    }
+
+    private async Task GetValueOriginal()
+    {
+        var value = await _diffEditor.OriginalEditor.GetValue();
+        Console.WriteLine($"Original value: {value}");
+    }
+
+    private async Task GetValueModified()
+    {
+        var value = await _diffEditor.ModifiedEditor.GetValue();
+        Console.WriteLine($"Modified value: {value}");
+    }
+}
