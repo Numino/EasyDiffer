@@ -2,12 +2,14 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
+      <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="BlazorMonaco" Version="3.1.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
         <PackageReference Include="MudBlazor" Version="6.11.2" />
         <PackageReference Include="Photino.Blazor" Version="2.6.0" />
+      <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
     </ItemGroup>
     <ItemGroup>
         <Content Update="wwwroot\**">
@@ -17,6 +19,9 @@
           <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
         </Content>
     </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\**" />
+  </ItemGroup>
     <ItemGroup>
       <_ContentIncludedByDefault Remove="WebHoster\obj\project.assets.json" />
       <_ContentIncludedByDefault Remove="WebHoster\obj\project.packagespec.json" />

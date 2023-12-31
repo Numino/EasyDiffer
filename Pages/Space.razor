@@ -1,0 +1,13 @@
+@page "/space/{SpaceName}"
+<h1>@SpaceName</h1>
+
+@code {
+    [Parameter]
+    public string SpaceName { get; set; }
+    
+    // protected override void OnParametersSet()
+    // {
+    //     base.OnParametersSet();
+    //     // Use SpaceName to load specific data for the space
+    // }
+}

@@ -1,9 +1,33 @@
+@using JsonDiffer.Services
 <MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
-    <MudNavLink Href="/Link1" Match="NavLinkMatch.Prefix">Link1</MudNavLink>
-    <MudNavGroup Title="SubMenu" Expanded="true">
-        <MudNavLink Href="/SubMenu1"  Match="NavLinkMatch.Prefix">SubMenu1</MudNavLink>
-        <MudNavLink Href="/SubMenu2"  Match="NavLinkMatch.Prefix">SubMenu2</MudNavLink>
-    </MudNavGroup>
+    @foreach (var space in _spaces)
+    {
+        <MudNavLink Href="@GetUrl(space.Name)" Match="NavLinkMatch.Prefix">@space.Name</MudNavLink>
+    }
+
+    @* <MudNavGroup Title="SubMenu" Expanded="true"> *@
+    @*     <MudNavLink Href="/SubMenu1"  Match="NavLinkMatch.Prefix">SubMenu1</MudNavLink> *@
+    @*     <MudNavLink Href="/SubMenu2"  Match="NavLinkMatch.Prefix">SubMenu2</MudNavLink> *@
+    @* </MudNavGroup> *@
     <MudNavLink Href="/settings"  Match="NavLinkMatch.Prefix">Settings</MudNavLink>
 </MudNavMenu>
+
+<MudButton @onclick="() => comparisonSpace.Do()">Hello</MudButton>
+@inject ComparisonSpaceService comparisonSpace
+@code
+{
+    private List<ComparisonSpace> _spaces = new List<ComparisonSpace>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        comparisonSpace.SpacesUpdated += list => _spaces = list;
+        //StateHasChanged();
+    }
+
+    private string GetUrl(string space)
+    {
+        return "/space/" + space;
+    }
+}

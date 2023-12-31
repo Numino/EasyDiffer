@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -8,8 +9,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using JsonDiffer.Infrastructure;
+using JsonDiffer.Services;
 using JsonDiffer.System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using Photino.Blazor;
 using PhotinoNET;
@@ -18,6 +21,7 @@ namespace JsonDiffer
 {
     class Program
     {
+        private static FileWatcherService _watcher;
         private const string LocalHostUrl = "http://localhost:27275/";
 
         [STAThread]
@@ -25,14 +29,22 @@ namespace JsonDiffer
         {
             var appBuilder = PhotinoBlazorAppBuilder.CreateDefault(args);
             appBuilder.Services.AddLogging();
+            appBuilder.Services.AddSingleton<IFileProvider>(_ =>
+                new ManifestEmbeddedFileProvider(
+                    typeof(Program).Assembly,
+                    "wwwroot"));
             appBuilder.RootComponents.Add<App>("app");
             appBuilder.Services.AddMudServices();
 
+            appBuilder.Services.AddSingleton<ComparisonSpaceService>();
+            
             var app = appBuilder.Build();
             app.MainWindow.SetGrantBrowserPermissions(true);
             app.MainWindow.SetTitle("JsonDiffer");
             app.MainWindow.SetUseOsDefaultSize(false);
             Task.Run(() => RunHttpServer(app));
+           // _watcher = new FileWatcherService(new List<string>{"lol"});
+           //     _watcher.Watch();
             var settings = Settings.Get();
             if (settings.FirstTimeSetup)
             {

@@ -1,13 +1,23 @@
 @page "/"
-         <SomeDiffer />
+@using JsonDiffer.Services
+<MudSelect T="string" Label="Select an item" @bind-Value="selectedItem">
+    @foreach (var item in items)
+    {
+        <MudSelectItem Value="@item">@item</MudSelectItem>
+    }
+</MudSelect>
 
-@* <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6"> *@
-@*     <MudTabPanel Text="Some File.txt"> *@
-@*     </MudTabPanel> *@
-@*     <MudTabPanel Text="Some File2.txt"> *@
-@*         <MudText>Some File.txt</MudText> *@
-@*     </MudTabPanel> *@
-@* </MudTabs> *@
+
+
+
+<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="false" PanelClass="pa-6">
+     @foreach (var item in items)
+    {
+            <MudTabPanel Text="@item"></MudTabPanel>
+    }
+    
+</MudTabs>
+         <SomeDiffer />
 
 
 @* <MudSelect T="Pizza" Label="LEFT Har" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter"> *@
@@ -17,12 +27,13 @@
 @*     <MudSelectItem Value="@(new Pizza("Spinaci"))" /> *@
 @* </MudSelect> *@
 @code {
-
-    public class Pizza
+    private string selectedItem;
+    private List<string> items = new List<string> { "File1", "File2" };
+    private FileWatcherService _fileWatcherService;
+  
+    protected override void OnInitialized()
     {
-        public Pizza(string margarita)
-        {
-        }
+        _fileWatcherService = new FileWatcherService(items);
+        _fileWatcherService.Watch();
     }
-
 }
