@@ -15,7 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using Photino.Blazor;
-using PhotinoNET;
 
 namespace JsonDiffer
 {
